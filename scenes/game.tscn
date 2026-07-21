@@ -254,7 +254,6 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("7_u5sy4")
 theme_override_font_sizes/font_size = 8
-text = "aaaaaa"
 
 [node name="Killzone" parent="." unique_id=555980748 instance=ExtResource("5_iywne")]
 position = Vector2(68, 34)
