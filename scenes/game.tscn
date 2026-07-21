@@ -5,8 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://pcm5wddgvk87" path="res://assets/sprites/world_tileset.png" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://tskfk44x47o1" path="res://scenes/platform.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://d2et1ths1urk4" path="res://scenes/coin.tscn" id="4_lbhrr"]
+[ext_resource type="Script" uid="uid://bjt24dnp3rhjs" path="res://scripts/angle_line.gd" id="5_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://bterdaek41u0r" path="res://scenes/killzone.tscn" id="5_iywne"]
 [ext_resource type="PackedScene" uid="uid://cwd2y1nm54t5o" path="res://scenes/slime.tscn" id="6_p57ef"]
+[ext_resource type="Script" uid="uid://bf8wiyi0372xc" path="res://scripts/power_meter.gd" id="6_vtaks"]
 [ext_resource type="FontFile" uid="uid://glf76awyjdva" path="res://assets/fonts/PixelOperator8.ttf" id="7_u5sy4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
@@ -238,6 +240,7 @@ layer_1/name = "Mid"
 layer_1/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, -65531, 0, 0, -65530, 0, 0, -65529, 0, 0, -131064, 0, 0, -131063, 0, 0, -131062, 0, 0, 5, 0, 1, 6, 0, 1, 7, 0, 1, 8, 0, 1, -65528, 0, 1, -65527, 0, 1, -65526, 0, 1, 10, 0, 1, 9, 0, 1, -262123, 0, 0, -262116, 0, 0, -393193, 131072, 4, -262121, 131072, 8, -196586, 0, 0, -196585, 0, 0, -196584, 0, 0, -196583, 0, 0, -196582, 0, 0, -196581, 0, 0, -196587, 65536, 0, -131050, 65536, 0, -131049, 65536, 0, -131048, 65536, 0, -131047, 65536, 0, -131046, 65536, 0, -131045, 65536, 0, -131044, 65536, 0, -196580, 65536, 0, -131051, 65536, 0, -327645, 393216, 0, -327644, 393216, 0, -327643, 393216, 0, -327642, 393216, 0, -327649, 393216, 0, -262113, 393216, 1, -327648, 393216, 0, -262112, 393216, 1, -327647, 393216, 0, -262111, 393216, 1, -196575, 393216, 1, -327646, 393216, 0, -262110, 393216, 1, -196574, 393216, 1, -262109, 393216, 1, -196573, 393216, 1, -262108, 393216, 1, -196572, 393216, 1, -262107, 393216, 1, -262106, 393216, 1)
 
 [node name="Player" parent="." unique_id=839110423 instance=ExtResource("1_uwrxv")]
+unique_name_in_owner = true
 position = Vector2(33, -17)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1181929202]
@@ -254,6 +257,17 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("7_u5sy4")
 theme_override_font_sizes/font_size = 8
+
+[node name="AngleLine" type="Node2D" parent="Player" unique_id=776033275]
+unique_name_in_owner = true
+visible = false
+z_as_relative = false
+script = ExtResource("5_0tnpc")
+
+[node name="PowerMeter" type="Node2D" parent="Player" unique_id=787481069]
+unique_name_in_owner = true
+visible = false
+script = ExtResource("6_vtaks")
 
 [node name="Killzone" parent="." unique_id=555980748 instance=ExtResource("5_iywne")]
 position = Vector2(68, 34)

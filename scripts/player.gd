@@ -20,20 +20,29 @@ var launch_mode_power = 3
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
+func get_facing_direction() -> int:
+	return -1 if animated_sprite_2d.flip_h else 1
+
 func _change_state(new_state: State) -> void:
 	state = new_state
 	match state:
 		State.WALKING:
-			%StatsLabel.hide()
+			#%StatsLabel.hide()
+			%AngleLine.hide()
+			%PowerMeter.hide()
 		State.LAUNCH_MODE:
 			launch_mode_angle = 45
 			launch_mode_power = 3
 			animated_sprite_2d.play("jump")
-			%StatsLabel.show()
+			#%StatsLabel.show()
+			%AngleLine.show()
+			%PowerMeter.show()
 			velocity.x = 0
 			_update_stats_label()
 		State.LAUNCHED:
-			%StatsLabel.hide()
+			#%StatsLabel.hide()
+			%AngleLine.hide()
+			%PowerMeter.hide()
 			animated_sprite_2d.play("fly")
 
 func _update_stats_label() -> void:
@@ -81,9 +90,8 @@ func _launch_mode_input(event: InputEvent) -> void:
 	if event.is_action_pressed("launch"):
 		var angle = deg_to_rad(launch_mode_angle)
 		var direction = Vector2.from_angle(angle)
-		var animated_sprite_2d_direction = 1 if animated_sprite_2d.flip_h == false else -1
 
-		velocity.x = direction.x * launch_mode_power * SPEED * animated_sprite_2d_direction
+		velocity.x = direction.x * launch_mode_power * SPEED * get_facing_direction()
 		velocity.y = direction.y * launch_mode_power * SPEED * -1
 
 		_change_state(State.LAUNCHED)
