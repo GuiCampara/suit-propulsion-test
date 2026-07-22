@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bterdaek41u0r" path="res://scenes/killzone.tscn" id="5_iywne"]
 [ext_resource type="Script" uid="uid://bf8wiyi0372xc" path="res://scripts/power_meter.gd" id="6_vtaks"]
 [ext_resource type="FontFile" uid="uid://glf76awyjdva" path="res://assets/fonts/PixelOperator8.ttf" id="7_u5sy4"]
+[ext_resource type="PackedScene" uid="uid://fij7c53cbl27" path="res://scenes/fruit.tscn" id="10_vtaks"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lnu2h"]
 texture = ExtResource("2_yqjtg")
@@ -266,3 +267,8 @@ position = Vector2(390, -258)
 
 [node name="Coin7" parent="Coins" unique_id=206447112 instance=ExtResource("4_lbhrr")]
 position = Vector2(481, -337)
+
+[node name="Fruits" type="Node" parent="." unique_id=220893964]
+
+[node name="Fruit" parent="Fruits" unique_id=266369663 instance=ExtResource("10_vtaks")]
+position = Vector2(83, -105)
