@@ -16,7 +16,7 @@ const launch_mode_power_increment = 0.1
 
 var state: State = State.WALKING
 var launch_mode_angle = 45
-var launch_mode_power = 3
+var launch_mode_power = 0.5
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -29,20 +29,20 @@ func _change_state(new_state: State) -> void:
 		State.WALKING:
 			#%StatsLabel.hide()
 			%AngleLine.hide()
-			%PowerMeter.hide()
+			#%PowerMeter.hide()
 		State.LAUNCH_MODE:
 			launch_mode_angle = 45
-			launch_mode_power = 3
+			launch_mode_power = 0.5
 			animated_sprite_2d.play("jump")
 			#%StatsLabel.show()
 			%AngleLine.show()
-			%PowerMeter.show()
+			#%PowerMeter.show()
 			velocity.x = 0
 			_update_stats_label()
 		State.LAUNCHED:
 			#%StatsLabel.hide()
 			%AngleLine.hide()
-			%PowerMeter.hide()
+			#%PowerMeter.hide()
 			animated_sprite_2d.play("fly")
 
 func _update_stats_label() -> void:
@@ -77,17 +77,18 @@ func _launch_mode_input(event: InputEvent) -> void:
 		launch_mode_angle += launch_mode_angle_increment
 	if event.is_action_pressed("decrease_angle", true):
 		launch_mode_angle -= launch_mode_angle_increment
-	if event.is_action_pressed("increase_power", true):
+	#if event.is_action_pressed("increase_power", true):
+	#	launch_mode_power += launch_mode_power_increment
+	#if event.is_action_pressed("decrease_power", true):
+	#	launch_mode_power -= launch_mode_power_increment
+	if event.is_action_pressed("launch", true):
 		launch_mode_power += launch_mode_power_increment
-	if event.is_action_pressed("decrease_power", true):
-		launch_mode_power -= launch_mode_power_increment
-
 	launch_mode_power = clamp(launch_mode_power, launch_mode_min_power, launch_mode_max_power)
 	launch_mode_angle = clamp(launch_mode_angle, launch_mode_min_angle, launch_mode_max_angle)
 
 	_update_stats_label()
-
-	if event.is_action_pressed("launch"):
+	
+	if event.is_action_released("launch",false):
 		var angle = deg_to_rad(launch_mode_angle)
 		var direction = Vector2.from_angle(angle)
 
@@ -95,6 +96,15 @@ func _launch_mode_input(event: InputEvent) -> void:
 		velocity.y = direction.y * launch_mode_power * SPEED * -1
 
 		_change_state(State.LAUNCHED)
+
+	#if event.is_action_pressed("launch"):
+	#	var angle = deg_to_rad(launch_mode_angle)
+	#	var direction = Vector2.from_angle(angle)
+#
+#		velocity.x = direction.x * launch_mode_power * SPEED * get_facing_direction()
+#		velocity.y = direction.y * launch_mode_power * SPEED * -1
+#
+#		_change_state(State.LAUNCHED)
 
 func _physics_process(delta: float) -> void:
 	match state:

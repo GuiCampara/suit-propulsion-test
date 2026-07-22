@@ -16,5 +16,5 @@ func _draw() -> void:
 	)
 	var color = WEAK_COLOR.lerp(STRONG_COLOR, power_t)
 
-	var end_point = 50* direction * Vector2(%Player.get_facing_direction(), -1)
-	draw_line(Vector2(0, -4), end_point, color, 1)
+	var end_point = length * direction * Vector2(%Player.get_facing_direction(), -1)
+	draw_line(Vector2(0, -4), end_point, color, %Player.launch_mode_power)
