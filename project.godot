@@ -93,6 +93,7 @@ launch={
 [physics]
 
 3d/physics_engine="Jolt Physics"
+2d/default_gravity=501.2470000000003
 
 [rendering]
 

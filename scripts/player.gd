@@ -4,7 +4,7 @@ extends CharacterBody2D
 enum State { WALKING, LAUNCH_MODE, LAUNCHED }
 
 const SPEED = 130.0
-const JUMP_VELOCITY = -300.0
+const JUMP_VELOCITY = -150.0
 
 const launch_mode_max_angle = 90
 const launch_mode_min_angle = 1
