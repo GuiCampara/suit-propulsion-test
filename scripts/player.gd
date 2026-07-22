@@ -5,6 +5,7 @@ enum State { WALKING, LAUNCH_MODE, LAUNCHED }
 
 const SPEED = 130.0
 const JUMP_VELOCITY = -150.0
+const BOUNCE_STRENGTH = 0.5
 
 const launch_mode_max_angle = 90
 const launch_mode_min_angle = 1
@@ -72,6 +73,12 @@ func _launch_mode_input(event: InputEvent) -> void:
 	if event.is_action_pressed("launch_mode"):
 		_change_state(State.WALKING)
 		return
+	
+	if event.is_action_pressed("move_left"):
+		animated_sprite_2d.flip_h = true
+	
+	if event.is_action_pressed("move_right"):
+		animated_sprite_2d.flip_h = false
 
 	if event.is_action_released("launch", false):
 		var angle = deg_to_rad(launch_mode_angle)
@@ -93,7 +100,7 @@ func _launch_mode_physics(delta: float) -> void:
 	launch_mode_power = clamp(launch_mode_power, launch_mode_min_power, launch_mode_max_power)
 	launch_mode_angle = clamp(launch_mode_angle, launch_mode_min_angle, launch_mode_max_angle)
 
-	_update_stats_label()
+	#_update_stats_label()
 
 func _physics_process(delta: float) -> void:
 	match state:
@@ -111,10 +118,16 @@ func _physics_process(delta: float) -> void:
 	elif velocity.x < 0:
 		animated_sprite_2d.flip_h = true
 
+	var incoming_velocity = velocity
 	move_and_slide()
 
-	if state == State.LAUNCHED and is_on_floor() and velocity.y >= 0:
-		_change_state(State.WALKING)
+	if state == State.LAUNCHED:
+		if get_slide_collision_count() > 0:
+			var collision = get_last_slide_collision()
+			velocity = incoming_velocity.bounce(collision.get_normal()) * BOUNCE_STRENGTH
+			print(velocity)
+		if is_on_floor() and velocity.length() <= 5:
+			_change_state(State.WALKING)
 
 func _walking_physics() -> void:
 	var direction := Input.get_axis("move_left", "move_right")
