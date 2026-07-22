@@ -8,11 +8,11 @@ const JUMP_VELOCITY = -150.0
 
 const launch_mode_max_angle = 90
 const launch_mode_min_angle = 1
-const launch_mode_angle_increment = 1
+const launch_mode_angle_speed = 60.0
 
 const launch_mode_max_power = 5
 const launch_mode_min_power = 0.5
-const launch_mode_power_increment = 0.1
+const launch_mode_power_speed = 3
 
 var state: State = State.WALKING
 var launch_mode_angle = 45
@@ -48,7 +48,7 @@ func _change_state(new_state: State) -> void:
 func _update_stats_label() -> void:
 	var launch_mode_power_display_value = launch_mode_power * 2
 	var power_text = "Power: " + str(snapped(launch_mode_power_display_value, 0.1))
-	var angle_text = "Angle: " + str(launch_mode_angle) + "°"
+	var angle_text = "Angle: " + str(int(round(launch_mode_angle))) + "°"
 	%StatsLabel.text = power_text + "\n" + angle_text
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -73,22 +73,7 @@ func _launch_mode_input(event: InputEvent) -> void:
 		_change_state(State.WALKING)
 		return
 
-	if event.is_action_pressed("increase_angle", true):
-		launch_mode_angle += launch_mode_angle_increment
-	if event.is_action_pressed("decrease_angle", true):
-		launch_mode_angle -= launch_mode_angle_increment
-	#if event.is_action_pressed("increase_power", true):
-	#	launch_mode_power += launch_mode_power_increment
-	#if event.is_action_pressed("decrease_power", true):
-	#	launch_mode_power -= launch_mode_power_increment
-	if event.is_action_pressed("launch", true):
-		launch_mode_power += launch_mode_power_increment
-	launch_mode_power = clamp(launch_mode_power, launch_mode_min_power, launch_mode_max_power)
-	launch_mode_angle = clamp(launch_mode_angle, launch_mode_min_angle, launch_mode_max_angle)
-
-	_update_stats_label()
-	
-	if event.is_action_released("launch",false):
+	if event.is_action_released("launch", false):
 		var angle = deg_to_rad(launch_mode_angle)
 		var direction = Vector2.from_angle(angle)
 
@@ -97,20 +82,26 @@ func _launch_mode_input(event: InputEvent) -> void:
 
 		_change_state(State.LAUNCHED)
 
-	#if event.is_action_pressed("launch"):
-	#	var angle = deg_to_rad(launch_mode_angle)
-	#	var direction = Vector2.from_angle(angle)
-#
-#		velocity.x = direction.x * launch_mode_power * SPEED * get_facing_direction()
-#		velocity.y = direction.y * launch_mode_power * SPEED * -1
-#
-#		_change_state(State.LAUNCHED)
+func _launch_mode_physics(delta: float) -> void:
+	var angle_input = Input.get_axis("decrease_angle", "increase_angle")
+	if angle_input != 0:
+		launch_mode_angle += angle_input * launch_mode_angle_speed * delta
+
+	if Input.is_action_pressed("launch"):
+		launch_mode_power += launch_mode_power_speed * delta
+
+	launch_mode_power = clamp(launch_mode_power, launch_mode_min_power, launch_mode_max_power)
+	launch_mode_angle = clamp(launch_mode_angle, launch_mode_min_angle, launch_mode_max_angle)
+
+	_update_stats_label()
 
 func _physics_process(delta: float) -> void:
 	match state:
 		State.WALKING:
 			_walking_physics()
-		State.LAUNCH_MODE, State.LAUNCHED:
+		State.LAUNCH_MODE:
+			_launch_mode_physics(delta)
+		State.LAUNCHED:
 			pass
 
 	velocity += get_gravity() * delta
