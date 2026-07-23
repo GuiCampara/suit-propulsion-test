@@ -28,6 +28,7 @@ func get_facing_direction() -> int:
 
 func _change_state(new_state: State) -> void:
 	state = new_state
+	extra_jumps = 0
 	match state:
 		State.WALKING:
 			#%StatsLabel.hide()
@@ -47,6 +48,7 @@ func _change_state(new_state: State) -> void:
 			%AngleLine.hide()
 			#%PowerMeter.hide()
 			animated_sprite_2d.play("fly")
+			
 
 func _update_stats_label() -> void:
 	var launch_mode_power_display_value = launch_mode_power * 2
